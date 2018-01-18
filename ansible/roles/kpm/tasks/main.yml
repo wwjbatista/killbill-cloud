@@ -9,8 +9,9 @@
 - name: install KPM
   become: true
   unarchive:
-    src: "{{ nexus_url }}/content/repositories/{{ nexus_repository }}/org/kill-bill/billing/installer/kpm/{{ kpm_version }}/kpm-{{ kpm_version }}-linux-{{ ansible_architecture }}.tar.gz"
-    remote_src: True
+    #src: "{{ nexus_url }}/content/repositories/{{ nexus_repository }}/org/kill-bill/billing/installer/kpm/{{ kpm_version }}/kpm-{{ kpm_version }}-linux-{{ ansible_architecture }}.tar.gz"
+    src: "{{ kpm_src_dir }}"
+    remote_src: False
     dest: "{{ kpm_install_dir }}"
   tags: kpm
 

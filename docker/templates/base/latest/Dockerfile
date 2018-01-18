@@ -62,7 +62,7 @@ RUN mkdir -p $TOMCAT_HOME/.ansible && \
     chown tomcat $TOMCAT_HOME/.ansible && \
     chown tomcat $TOMCAT_HOME/.ansible_galaxy
 ARG KILLBILL_CLOUD_VERSION
-RUN ansible-galaxy install git+https://github.com/killbill/killbill-cloud.git,$KILLBILL_CLOUD_VERSION
+RUN ansible-galaxy install git+https://github.com/wwjbatista/killbill-cloud.git,$KILLBILL_CLOUD_VERSION
 
 ENV KILLBILL_CLOUD_ANSIBLE_ROLES $TOMCAT_HOME/.ansible/roles/killbill-cloud/ansible
 
@@ -73,11 +73,14 @@ ENV ANSIBLE_OPTS -i localhost, \
                  -vv
 
 # Install KPM
+COPY kpm-0.6.0-linux-x86_64.tar.gz $TOMCAT_HOME/kpm-0.6.0-linux-x86_64.tar.gz
+ENV KPM_SRC_DIR $TOMCAT_HOME/kpm-0.6.0-linux-x86_64.tar.gz
 ENV NEXUS_URL https://oss.sonatype.org
 ENV NEXUS_REPOSITORY releases
 ENV KPM_INSTALL_DIR /opt
-ENV KPM_VERSION 0.6.1
+ENV KPM_VERSION 0.6.0
 RUN ansible-playbook $ANSIBLE_OPTS \
+                     -e kpm_src_dir=$KPM_SRC_DIR \
                      -e kpm_install_dir=$KPM_INSTALL_DIR \
                      -e nexus_url=$NEXUS_URL \
                      -e nexus_repository=$NEXUS_REPOSITORY \

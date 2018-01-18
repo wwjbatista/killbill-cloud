@@ -36,7 +36,7 @@ namespace :package do
   end
 
   desc 'Install gems to local directory'
-  task :bundle_install do
+  task :bundle_install => [:clean] do
     # Note! Must match TRAVELING_RUBY_VERSION above
     expected_ruby_version = TRAVELING_RUBY_VERSION.split('-')[-1]
     if RUBY_VERSION !~ /#{Regexp.quote(expected_ruby_version)}/

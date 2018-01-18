@@ -2,6 +2,7 @@
 # WANT_JSON
 
 require 'pathname'
+require 'json'
 
 data = {}
 File.open(ARGV[0]) do |fh|
