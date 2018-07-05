@@ -4,10 +4,11 @@ volumes:
   db:
 services:
   killbill:
-    image: killbill/killbill:0.19.0
+    image: killbill/killbill:latest
     ports:
       - "8080:8080"
       - "12345:12345"
+      - "8000:8000"
     environment:
       - KILLBILL_DAO_URL=jdbc:mysql://db:3306/killbill
       - KILLBILL_DAO_USER=root

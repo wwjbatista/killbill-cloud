@@ -1,5 +1,5 @@
 # Shell image that installs Kill Bill on startup
-FROM killbill/base:0.19.x
+FROM killbill/base:latest
 MAINTAINER Kill Bill core team <killbilling-users@googlegroups.com>
 
 ENV KILLBILL_INSTALL_DIR /var/lib/killbill
@@ -13,6 +13,7 @@ COPY ./kpm.yml $KILLBILL_INSTALL_DIR
 # Default configuration options
 ENV KILLBILL_BUNDLE_INSTALL_DIR $KILLBILL_INSTALL_DIR/bundles
 ENV KILLBILL_JRUBY_CONF_DIR $KILLBILL_INSTALL_DIR/config
+ENV KILLBILL_SERVER_BASE_URL http://$ENV_HOST_IP:8080
 
 ENV KPM_INSTALL_CMD ansible-playbook $ANSIBLE_OPTS  \
                                      -e kpm_install_dir=$KPM_INSTALL_DIR \
