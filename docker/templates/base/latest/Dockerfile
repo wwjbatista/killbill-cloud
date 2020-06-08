@@ -78,7 +78,7 @@ ENV ANSIBLE_OPTS -i localhost, \
 ENV NEXUS_URL https://oss.sonatype.org
 ENV NEXUS_REPOSITORY releases
 ENV KPM_INSTALL_DIR /opt
-ENV KPM_VERSION 0.6.4
+ENV KPM_VERSION 0.8.1
 RUN ansible-playbook $ANSIBLE_OPTS \
                      -e kpm_install_dir=$KPM_INSTALL_DIR \
                      -e nexus_url=$NEXUS_URL \
@@ -109,13 +109,6 @@ RUN ansible-playbook $ANSIBLE_OPTS \
                      -e gnu_arch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
                      $KILLBILL_CLOUD_ANSIBLE_ROLES/tomcat.yml
 
-ENV START_TOMCAT_CMD ansible-playbook $ANSIBLE_OPTS  \
-                                      -e tomcat_owner=$TOMCAT_OWNER \
-                                      -e tomcat_group=$TOMCAT_GROUP \
-                                      -e tomcat_home=$TOMCAT_HOME \
-                                      -e catalina_home=$CATALINA_HOME \
-                                      -e catalina_base=$CATALINA_BASE \
-                                      $KILLBILL_CLOUD_ANSIBLE_ROLES/tomcat_restart.yml
 # Start Tomcat
 EXPOSE 8080
-CMD ["bash", "-c", "$START_TOMCAT_CMD && tail -F $CATALINA_BASE/logs/catalina.out"]
+CMD ["/usr/share/tomcat/bin/catalina.sh", "run"]

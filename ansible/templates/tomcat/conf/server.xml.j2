@@ -27,11 +27,15 @@
             unpackWARs="true"
             autoDeploy="false"><!-- Disable autoDeploy to avoid restarts when running KPM install -->
 
+        <Valve className="org.apache.catalina.valves.RemoteIpValve"
+               protocolHeader="x-forwarded-proto"
+               portHeader="x-forwarded-port" />
+
         <Valve className="org.apache.catalina.valves.AccessLogValve"
                directory="logs"
                prefix="localhost_access_log."
                suffix=".txt"
-               pattern="%h %l %u %t &quot;%m %U&quot; %s %b %D" />
+               pattern="%h %l %u %t &quot;%m %U&quot; %s %b %D %{X-Request-id}i" />
 
         <Valve className="org.apache.catalina.valves.rewrite.RewriteValve" />
       </Host>

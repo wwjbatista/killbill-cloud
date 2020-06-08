@@ -3,57 +3,45 @@ nexus_url: https://oss.sonatype.org
 nexus_repository: releases
 
 kpm_install_dir: /opt
-kpm_version: 0.6.5
+kpm_version: 0.8.1
 kpm_path: "{{ kpm_install_dir }}/kpm-{{ kpm_version }}-linux-{{ ansible_architecture }}"
 
 catalina_home: /usr/share/tomcat
-catalina_base: /opt/apache-tomcat
-tomcat_owner: "{{ ansible_user_id }}"
-tomcat_group: root
+catalina_base: /var/lib/tomcat
+tomcat_owner: tomcat
+tomcat_group: tomcat
+
+# Webapps directory : {{ catalina_base }}/{{ kb_webapps }}
+kb_webapps: webapps
+kaui_webapps: webapps
 
 tomcat_foreground: false
 
 # Base directory for namespacing
-kb_install_dir: /opt/killbill
+kb_install_dir: /var/lib/killbill
 # Configuration files (killbill.properties, JRuby files, etc.)
 kb_config_dir: "{{ kb_install_dir }}/config"
 # Kill Bill plugins and OSGI bundles
 kb_plugins_dir: "{{ kb_install_dir }}/bundles"
-# kpm.yml -- see https://github.com/killbill/killbill-cloud/tree/master/kpm
-kpm_yml:
-  killbill:
-    version: 0.18.10
-    webapp_path: "{{ catalina_base }}/webapps/ROOT.war"
-    nexus:
-      ssl_verify: false
-      url: "{{ nexus_url }}"
-      repository: "{{ nexus_repository }}"
-    plugins_dir: "{{ kb_plugins_dir }}"
-    plugins:
-      java:
-        - name: analytics
-      ruby:
-        - name: kpm
+# kpm.yml file
+kpm_yml: "{{ kb_install_dir }}/kpm.yml"
 
-# Kaui specific properties
-killbill_url: http://127.0.0.1:8080
-killbill_api_key: bob
-killbill_api_secret: lazar
-kaui_db_adapter: mysql2
+flyway_install_dir: /opt
+flyway: java -jar {{ flyway_install_dir }}/killbill-flyway.jar -url='{{ lookup('env','KILLBILL_DAO_URL') }}' -user={{ lookup('env','KILLBILL_DAO_USER') }} -password={{ lookup('env','KILLBILL_DAO_PASSWORD') }}
 
 # Extra JVM properties (e.g. -Dlogback.configurationFile={{ kb_config_dir }}/logback.xml)
 kaui_system_properties: ''
 kb_system_properties: ''
 
 # Tomcat and JVM properties -- recommended defaults
-jvm_initial_memory: 4G
-jvm_max_memory: 4G
+jvm_initial_memory: 512m
+jvm_max_memory: 2G
 jvm_jdwp_port: 12345
 jvm_jdwp_server: y
 jvm_cms_initiating_fraction_threshold: 50
-jvm_new_size: 600m
-jvm_max_new_size: 1900m
+jvm_new_size: 256m
+jvm_max_new_size: 1024m
 jvm_survivor_ratio: 10
 jvm_jmx_port: 8000
 tomcat_port: 8080
-tomcat_max_threads: 150
+tomcat_max_threads: 100

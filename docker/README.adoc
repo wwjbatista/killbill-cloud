@@ -17,6 +17,15 @@ toc::[]
 * `killbill/kaui:0.X.Y`: image with a specific version of Kaui installed.
 * `killbill/killbill:build`: official build environment for all published Kill Bill artifacts (useful for developers).
 
+[[tips-and-tricks]]
+### Tips and tricks
+
+The container STDOUT isn't that useful: to access logs, look at the `killbill.out` log file instead:
+
+```
+docker exec CONTAINER_ID tail -f logs/killbill.out
+```
+
 [[environment-variables]]
 ### Environment variables
 
@@ -28,7 +37,12 @@ For jConsole and remote debugging, you need to pass the host IP address as `ENV_
 The following environment variables will populate the default `killbill.properties`. For further customization, you should bind mount `/var/lib/killbill/killbill.properties` when launching the Docker image.
 
 * `KILLBILL_ANALYTICS_NOTIFICATION_NB_THREADS` (default `5`)
+* `KILLBILL_ANALYTICS_LIFECYCLE_DISPATCH_NBTHREADS` (default `1`)
+* `KILLBILL_ANALYTICS_LIFECYCLE_COMPLETE_NBTHREADS` (default `2`)
 * `KILLBILL_ANALYTICS_QUEUE_CAPACITY` (default `30000`)
+* `KILLBILL_ANALYTICS_REAP_THRESHOLD` (default `10m`)
+* `KILLBILL_ANALYTICS_MAX_REDISPATCH_COUNT` (default `10`)
+* `KILLBILL_ANALYTICS_REAP_SCHEDULE` (default `3m`)
 * `KILLBILL_BUNDLE_CACHE_NAME` (default `osgi-cache`)
 * `KILLBILL_BUNDLE_INSTALL_DIR` (default `/var/lib/killbill/bundles`)
 * `KILLBILL_BUNDLE_PROPERTY_NAME` (default `killbill.properties`)
@@ -38,6 +52,11 @@ The following environment variables will populate the default `killbill.properti
 * `KILLBILL_BUS_EXTERNAL_SLEEP` (default `0`)
 * `KILLBILL_BUS_EXTERNAL_TABLE_NAME` (default `bus_ext_events`)
 * `KILLBILL_BUS_EXTERNAL_USE_INFLIGHT_Q` (default `true`)
+* `KILLBILL_BUS_EXTERNAL_LIFECYCLE_DISPATCH_NBTHREADS` (default `1`)
+* `KILLBILL_BUS_EXTERNAL_LIFECYCLE_COMPLETE_NBTHREADS` (default `2`)
+* `KILLBILL_BUS_EXTERNAL_REAP_THRESHOLD` (default `10m`)
+* `KILLBILL_BUS_EXTERNAL_MAX_REDISPATCH_COUNT` (default `10`)
+* `KILLBILL_BUS_EXTERNAL_REAP_SCHEDULE` (default `3m`)
 * `KILLBILL_BUS_MAIN_CLAIMED` (default `10`)
 * `KILLBILL_BUS_MAIN_HISTORY_TABLE_NAME` (default `bus_events_history`)
 * `KILLBILL_BUS_MAIN_IN_MEMORY` (default `false`)
@@ -45,6 +64,11 @@ The following environment variables will populate the default `killbill.properti
 * `KILLBILL_BUS_MAIN_OFF` (default `false`)
 * `KILLBILL_BUS_MAIN_SLEEP` (default `0`)
 * `KILLBILL_BUS_MAIN_TABLE_NAME` (default `bus_events`)
+* `KILLBILL_BUS_MAIN_LIFECYCLE_DISPATCH_NBTHREADS` (default `1`)
+* `KILLBILL_BUS_MAIN_LIFECYCLE_COMPLETE_NBTHREADS` (default `2`)
+* `KILLBILL_BUS_MAIN_REAP_THRESHOLD` (default `10m`)
+* `KILLBILL_BUS_MAIN_MAX_REDISPATCH_COUNT` (default `10`)
+* `KILLBILL_BUS_MAIN_REAP_SCHEDULE` (default `3m`)
 * `KILLBILL_CACHE_CONFIG_LOCATION` (default `ehcache.xml`)
 * `KILLBILL_CATALOG_BUNDLE_PATH` (default `org/killbill/billing/util/template/translation/CatalogTranslation`)
 * `KILLBILL_CATALOG_URI` (default `SpyCarBasic.xml`)
@@ -60,7 +84,7 @@ The following environment variables will populate the default `killbill.properti
 * `KILLBILL_DAO_MAX_CONNECTION_AGE` (default `0m`)
 * `KILLBILL_DAO_MIN_IDLE` (default `5`)
 * `KILLBILL_DAO_MYSQL_SERVER_VERSION` (default `4.0`)
-* `KILLBILL_DAO_PASSWORD` (default `killkill`)
+* `KILLBILL_DAO_PASSWORD` (default `killbill`)
 * `KILLBILL_DAO_POOLING_TYPE` (default `HIKARICP`)
 * `KILLBILL_DAO_PREP_STMT_CACHE_SIZE` (default `500`)
 * `KILLBILL_DAO_PREP_STMT_CACHE_SQL_LIMIT` (default `2048`)
@@ -94,8 +118,12 @@ The following environment variables will populate the default `killbill.properti
 * `KILLBILL_MAIN_CLAIM_TIME` (default `5m`)
 * `KILLBILL_MAIN_NOTIFICATION_NB_THREADS` (default `10`)
 * `KILLBILL_MAIN_NOTIFICATION_OFF` (default `false`)
+* `KILLBILL_MAIN_LIFECYCLE_DISPATCH_NBTHREADS` (default `1`)
+* `KILLBILL_MAIN_LIFECYCLE_COMPLETE_NBTHREADS` (default `2`)
 * `KILLBILL_MAIN_QUEUE_CAPACITY` (default `1000000`)
-* `KILLBILL_MAIN_QUEUE_CAPACITY` (default `100`)
+* `KILLBILL_MAIN_REAP_THRESHOLD` (default `10m`)
+* `KILLBILL_MAIN_MAX_REDISPATCH_COUNT` (default `10`)
+* `KILLBILL_MAIN_REAP_SCHEDULE` (default `3m`)
 * `KILLBILL_MAIN_QUEUE_MODE` (default `STICKY_POLLING`)
 * `KILLBILL_MANUAL_PAY_TEMPLATE_NAME` (default `org/killbill/billing/util/email/templates/HtmlInvoiceTemplate.mustache`)
 * `KILLBILL_MAX_FAILURE_RETRY` (default `3`)
@@ -176,6 +204,8 @@ The following environment variables will populate the default `killbill.properti
 * `KAUI_CONFIG_DAO_USER` (default `kaui`)
 * `KAUI_CONFIG_DAO_PASSWORD` (default `kaui`)
 * `KAUI_CONFIG_DEMO` (default `false`)
+
+For PostgreSQL support, you also need to specify `KAUI_CONFIG_DAO_ADAPTER=postgresql`.
 
 [[changes-since-0.18]]
 ## Changes since 0.18
@@ -260,3 +290,9 @@ docker login
 docker push killbill/$TARGET:$VERSION
 docker logout
 ....
+
+### Custom ansible playboook
+
+```
+docker build --no-cache --build-arg KILLBILL_CLOUD_VERSION=work-for-release-0.19.x -t killbill/base:0.19.x .
+```

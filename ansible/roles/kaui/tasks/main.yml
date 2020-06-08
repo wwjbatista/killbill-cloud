@@ -1,12 +1,4 @@
 ---
-- name: ensure Kill Bill dirs exist
-  become: true
-  file: path={{ item }} state=directory owner={{ tomcat_owner }} group={{ tomcat_group }}
-  with_items:
-    - "{{ kb_install_dir }}"
-    - "{{ kb_config_dir }}"
-  tags: kpm-install
-
 - name: generate Tomcat files
   become: true
   template:
@@ -28,3 +20,50 @@
     kpm_path: "{{ kpm_path }}"
     kpm_yml: "{{ kpm_yml }}"
   tags: kpm-install
+
+- name: Create ROOT directory to unarchive the WAR
+  become: true
+  file:
+    path: "{{ catalina_base }}/{{ kaui_webapps }}/ROOT"
+    state: directory
+    mode: '0755'
+
+- name: Expand WAR file if not already done
+  become: true
+  command: |
+    "{{ java_home }}/bin/jar" -xf ../ROOT.war
+  args:
+    chdir: "{{ catalina_base }}/{{ kaui_webapps }}/ROOT"
+    creates: "{{ catalina_base }}/{{ kaui_webapps }}/ROOT/WEB-INF"
+  tags: kaui-logback
+
+- name: Copy logback.xml
+  become: true
+  template:
+    src: "kaui/{{ item.name }}.j2"
+    dest: "{{ catalina_base }}/{{ kaui_webapps }}/ROOT/WEB-INF/classes/logback.xml"
+    mode: u=rw,g=r,o=r
+    owner: "{{ tomcat_owner }}"
+    group: "{{ tomcat_group }}"
+    force: true
+  with_items:
+    - name: logback.xml
+  tags: kaui-logback
+
+- name: Recursively change ownership for the expanded ROOT
+  become: true
+  file:
+    path: "{{ catalina_base }}/{{ kaui_webapps }}/ROOT"
+    state: directory
+    recurse: yes
+    owner: "{{ tomcat_owner }}"
+    group: "{{ tomcat_group }}"
+    mode: u=rwX,g=rX,o=rX
+  tags: kaui-logback
+
+- name: Remove root archive
+  become: true
+  file:
+    path: "{{ catalina_base }}/{{ kaui_webapps }}/ROOT.war"
+    state: absent
+  tags: kaui-logback

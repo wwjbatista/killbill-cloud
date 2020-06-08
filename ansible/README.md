@@ -20,6 +20,7 @@ The roles can now be referenced in your playbooks via `killbill-cloud/ansible/ro
 
 See below for example playbooks.
 
+
 # Usage
 
 ## killbill.yml playbook
@@ -57,6 +58,18 @@ Example playbook on how to install Tomcat (Java is a pre-requisite):
 ```
 ansible-playbook -i <HOST_FILE> tomcat.yml
 ```
+
+## migrations.yml playbook
+
+Playbook to manage Kill Bill (and its plugins) database migrations.
+
+Assuming Kill Bill is installed locally (`/var/lib/tomcat/webapps/ROOT.war` by default) and your `kpm.yml` (`/var/lib/killbill/kpm.yml` by default) points to the **new** version of Kill Bill:
+
+```
+ansible-playbook -i localhost, -e ansible_connection=local -e gh_token=XXX migrations.yml
+```
+
+This will install Flyway, fetch all migrations and prompt the user whether they should be applied.
 
 ## plugin.yml playbook
 
@@ -107,3 +120,36 @@ ansible <HOST_GROUP> -i <HOST_FILE> -m killbill_facts -a 'killbill_web_path=/pat
 ```
 
 Ansible requires the module file to start with `/usr/bin/ruby` to allow for shebang line substitution. If no Ruby interpreter is available at that path, you can configure it through `ansible_ruby_interpreter`, which is set per-host as an inventory variable associated with a host or group of hosts (e.g. `ansible_ruby_interpreter=/opt/kpm-0.5.2-linux-x86_64/lib/ruby/bin/ruby` in your host file).
+ 
+
+# Testing Playbooks
+
+In order to test, one can an inventory:
+
+## Locally
+
+```
+# File localhost/inventory 
+[server]
+127.0.0.1 ansible_user=sbrossier
+```
+
+```
+> ansible-playbook -v -i localhost/inventory -e java_home=/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home  -u <user> the _playbook.yml
+```
+
+## EC2
+
+```
+# File ec2/inventory
+[server]
+ec2-18-233-67-208.compute-1.amazonaws.com ansible_user=ubuntu
+```
+ 
+```
+> ansible-playbook -v -i ec2/inventory -e java_home=/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home  -u ubuntu the _playbook.yml
+```
+
+
+
+

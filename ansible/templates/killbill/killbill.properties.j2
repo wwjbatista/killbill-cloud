@@ -48,7 +48,8 @@ org.killbill.billing.osgi.dao.mysqlServerVersion={{ lookup('env', 'KILLBILL_DAO_
 {% endif %}
 {% if lookup('env', 'KILLBILL_OSGI_DAO_PASSWORD') %}
 org.killbill.billing.osgi.dao.password={{ lookup('env', 'KILLBILL_OSGI_DAO_PASSWORD') }}
-{% elif lookup('env', 'KILLBILL_DAO_PASSWORD') %}
+{% else %}
+{# Allow for blank passwords (SSL certificates usecase) #}
 org.killbill.billing.osgi.dao.password={{ lookup('env', 'KILLBILL_DAO_PASSWORD') }}
 {% endif %}
 {% if lookup('env', 'KILLBILL_OSGI_DAO_POOLING_TYPE') %}
@@ -132,9 +133,8 @@ org.killbill.dao.minIdle={{ lookup('env', 'KILLBILL_DAO_MIN_IDLE') }}
 {% if lookup('env', 'KILLBILL_DAO_MYSQL_SERVER_VERSION') %}
 org.killbill.dao.mysqlServerVersion={{ lookup('env', 'KILLBILL_DAO_MYSQL_SERVER_VERSION') }}
 {% endif %}
-{% if lookup('env', 'KILLBILL_DAO_PASSWORD') %}
+{# Allow for blank passwords (SSL certificates usecase) #}
 org.killbill.dao.password={{ lookup('env', 'KILLBILL_DAO_PASSWORD') }}
-{% endif %}
 {% if lookup('env', 'KILLBILL_DAO_POOLING_TYPE') %}
 org.killbill.dao.poolingType={{ lookup('env', 'KILLBILL_DAO_POOLING_TYPE') }}
 {% endif %}
@@ -255,8 +255,23 @@ org.killbill.notificationq.analytics.max.failure.retry={{ lookup('env', 'KILLBIL
 {% if lookup('env', 'KILLBILL_ANALYTICS_NOTIFICATION_NB_THREADS') %}
 org.killbill.notificationq.analytics.notification.nbThreads={{ lookup('env', 'KILLBILL_ANALYTICS_NOTIFICATION_NB_THREADS') }}
 {% endif %}
+{% if lookup('env', 'KILLBILL_ANALYTICS_LIFECYCLE_DISPATCH_NBTHREADS') %}
+org.killbill.notificationq.analytics.lifecycle.dispatch.nbThreads={{ lookup('env', 'KILLBILL_ANALYTICS_LIFECYCLE_DISPATCH_NBTHREADS') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_ANALYTICS_LIFECYCLE_COMPLETE_NBTHREADS') %}
+org.killbill.notificationq.analytics.lifecycle.complete.nbThreads={{ lookup('env', 'KILLBILL_ANALYTICS_LIFECYCLE_COMPLETE_NBTHREADS') }}
+{% endif %}
 {% if lookup('env', 'KILLBILL_ANALYTICS_QUEUE_CAPACITY') %}
 org.killbill.notificationq.analytics.queue.capacity={{ lookup('env', 'KILLBILL_ANALYTICS_QUEUE_CAPACITY') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_ANALYTICS_REAP_THRESHOLD') %}
+org.killbill.notificationq.analytics.reapThreshold={{ lookup('env', 'KILLBILL_ANALYTICS_REAP_THRESHOLD') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_ANALYTICS_MAX_REDISPATCH_COUNT') %}
+org.killbill.notificationq.analytics.maxReDispatchCount={{ lookup('env', 'KILLBILL_ANALYTICS_MAX_REDISPATCH_COUNT') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_ANALYTICS_REAP_SCHEDULE') %}
+org.killbill.notificationq.analytics.reapSchedule={{ lookup('env', 'KILLBILL_ANALYTICS_REAP_SCHEDULE') }}
 {% endif %}
 {% if lookup('env', 'KILLBILL_NOTIFICATIONQ_ANALYTICS_SLEEP') %}
 org.killbill.notificationq.analytics.sleep={{ lookup('env', 'KILLBILL_NOTIFICATIONQ_ANALYTICS_SLEEP') }}
@@ -285,8 +300,23 @@ org.killbill.notificationq.main.notification.nbThreads={{ lookup('env', 'KILLBIL
 {% if lookup('env', 'KILLBILL_MAIN_NOTIFICATION_OFF') %}
 org.killbill.notificationq.main.notification.off={{ lookup('env', 'KILLBILL_MAIN_NOTIFICATION_OFF') }}
 {% endif %}
+{% if lookup('env', 'KILLBILL_MAIN_LIFECYCLE_DISPATCH_NBTHREADS') %}
+org.killbill.notificationq.main.lifecycle.dispatch.nbThreads={{ lookup('env', 'KILLBILL_MAIN_LIFECYCLE_DISPATCH_NBTHREADS') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_MAIN_LIFECYCLE_COMPLETE_NBTHREADS') %}
+org.killbill.notificationq.main.lifecycle.complete.nbThreads={{ lookup('env', 'KILLBILL_MAIN_LIFECYCLE_COMPLETE_NBTHREADS') }}
+{% endif %}
 {% if lookup('env', 'KILLBILL_MAIN_QUEUE_CAPACITY') %}
 org.killbill.notificationq.main.queue.capacity={{ lookup('env', 'KILLBILL_MAIN_QUEUE_CAPACITY') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_MAIN_REAP_THRESHOLD') %}
+org.killbill.notificationq.main.reapThreshold={{ lookup('env', 'KILLBILL_MAIN_REAP_THRESHOLD') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_MAIN_MAX_REDISPATCH_COUNT') %}
+org.killbill.notificationq.main.maxReDispatchCount={{ lookup('env', 'KILLBILL_MAIN_MAX_REDISPATCH_COUNT') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_MAIN_REAP_SCHEDULE') %}
+org.killbill.notificationq.main.reapSchedule={{ lookup('env', 'KILLBILL_MAIN_REAP_SCHEDULE') }}
 {% endif %}
 {% if lookup('env', 'KILLBILL_MAIN_QUEUE_MODE') %}
 org.killbill.notificationq.main.queue.mode={{ lookup('env', 'KILLBILL_MAIN_QUEUE_MODE') }}
@@ -378,8 +408,23 @@ org.killbill.persistent.bus.external.max.failure.retry={{ lookup('env', 'KILLBIL
 {% if lookup('env', 'KILLBILL_BUS_EXTERNAL_NB_THREADS') %}
 org.killbill.persistent.bus.external.nbThreads={{ lookup('env', 'KILLBILL_BUS_EXTERNAL_NB_THREADS') }}
 {% endif %}
+{% if lookup('env', 'KILLBILL_BUS_EXTERNAL_LIFECYCLE_DISPATCH_NBTHREADS') %}
+org.killbill.persistent.bus.external.lifecycle.dispatch.nbThreads={{ lookup('env', 'KILLBILL_BUS_EXTERNAL_LIFECYCLE_DISPATCH_NBTHREADS') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_BUS_EXTERNAL_LIFECYCLE_COMPLETE_NBTHREADS') %}
+org.killbill.persistent.bus.external.lifecycle.complete.nbThreads={{ lookup('env', 'KILLBILL_BUS_EXTERNAL_LIFECYCLE_COMPLETE_NBTHREADS') }}
+{% endif %}
 {% if lookup('env', 'KILLBILL_EXTERNAL_QUEUE_CAPACITY') %}
 org.killbill.persistent.bus.external.queue.capacity={{ lookup('env', 'KILLBILL_EXTERNAL_QUEUE_CAPACITY') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_BUS_EXTERNAL_REAP_THRESHOLD') %}
+org.killbill.persistent.bus.external.reapThreshold={{ lookup('env', 'KILLBILL_BUS_EXTERNAL_REAP_THRESHOLD') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_BUS_EXTERNAL_MAX_REDISPATCH_COUNT') %}
+org.killbill.persistent.bus.external.maxReDispatchCount={{ lookup('env', 'KILLBILL_BUS_EXTERNAL_MAX_REDISPATCH_COUNT') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_BUS_EXTERNAL_REAP_SCHEDULE') %}
+org.killbill.persistent.bus.external.reapSchedule={{ lookup('env', 'KILLBILL_BUS_EXTERNAL_REAP_SCHEDULE') }}
 {% endif %}
 {% if lookup('env', 'KILLBILL_BUS_EXTERNAL_SLEEP') %}
 org.killbill.persistent.bus.external.sleep={{ lookup('env', 'KILLBILL_BUS_EXTERNAL_SLEEP') }}
@@ -411,8 +456,23 @@ org.killbill.persistent.bus.main.nbThreads={{ lookup('env', 'KILLBILL_BUS_MAIN_N
 {% if lookup('env', 'KILLBILL_BUS_MAIN_OFF') %}
 org.killbill.persistent.bus.main.off={{ lookup('env', 'KILLBILL_BUS_MAIN_OFF') }}
 {% endif %}
+{% if lookup('env', 'KILLBILL_BUS_MAIN_LIFECYCLE_DISPATCH_NBTHREADS') %}
+org.killbill.persistent.bus.main.lifecycle.dispatch.nbThreads={{ lookup('env', 'KILLBILL_BUS_MAIN_LIFECYCLE_DISPATCH_NBTHREADS') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_BUS_MAIN_LIFECYCLE_COMPLETE_NBTHREADS') %}
+org.killbill.persistent.bus.main.lifecycle.complete.nbThreads={{ lookup('env', 'KILLBILL_BUS_MAIN_LIFECYCLE_COMPLETE_NBTHREADS') }}
+{% endif %}
 {% if lookup('env', 'KILLBILL_MAIN_QUEUE_CAPACITY') %}
 org.killbill.persistent.bus.main.queue.capacity={{ lookup('env', 'KILLBILL_MAIN_QUEUE_CAPACITY') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_BUS_MAIN_REAP_THRESHOLD') %}
+org.killbill.persistent.bus.main.reapThreshold={{ lookup('env', 'KILLBILL_BUS_MAIN_REAP_THRESHOLD') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_BUS_MAIN_MAX_REDISPATCH_COUNT') %}
+org.killbill.persistent.bus.main.maxReDispatchCount={{ lookup('env', 'KILLBILL_BUS_MAIN_MAX_REDISPATCH_COUNT') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_BUS_MAIN_REAP_SCHEDULE') %}
+org.killbill.persistent.bus.main.reapSchedule={{ lookup('env', 'KILLBILL_BUS_MAIN_REAP_SCHEDULE') }}
 {% endif %}
 {% if lookup('env', 'KILLBILL_MAIN_QUEUE_MODE') %}
 org.killbill.persistent.bus.main.queue.mode={{ lookup('env', 'KILLBILL_MAIN_QUEUE_MODE') }}
@@ -461,4 +521,31 @@ org.killbill.template.name={{ lookup('env', 'KILLBILL_TEMPLATE_NAME') }}
 {% endif %}
 {% if lookup('env', 'KILLBILL_TENANT_BROADCAST_RATE') %}
 org.killbill.tenant.broadcast.rate={{ lookup('env', 'KILLBILL_TENANT_BROADCAST_RATE') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_KPM_USERNAME') %}
+org.killbill.billing.plugin.kpm.adminUsername={{ lookup('env', 'KILLBILL_KPM_USERNAME') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_KPM_PASSWORD') %}
+org.killbill.billing.plugin.kpm.adminPassword={{ lookup('env', 'KILLBILL_KPM_PASSWORD') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_KPM_PATH') %}
+org.killbill.billing.plugin.kpm.kpmPath={{ lookup('env', 'KILLBILL_KPM_PATH') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_KPM_BUNDLES_PATH') %}
+org.killbill.billing.plugin.kpm.bundlesPath={{ lookup('env', 'KILLBILL_KPM_BUNDLES_PATH') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_KPM_NEXUS_URL') %}
+org.killbill.billing.plugin.kpm.nexusUrl={{ lookup('env', 'KILLBILL_KPM_NEXUS_URL') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_KPM_NEXUS_REPOSITORY') %}
+org.killbill.billing.plugin.kpm.nexusRepository={{ lookup('env', 'KILLBILL_KPM_NEXUS_REPOSITORY') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_KPM_STRICT_SSL') %}
+org.killbill.billing.plugin.kpm.strictSSL={{ lookup('env', 'KILLBILL_KPM_STRICT_SSL') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_KPM_READ_TIMEOUT_SEC') %}
+org.killbill.billing.plugin.kpm.readTimeoutSec={{ lookup('env', 'KILLBILL_KPM_READ_TIMEOUT_SEC') }}
+{% endif %}
+{% if lookup('env', 'KILLBILL_KPM_CONNECT_TIMEOUT_SEC') %}
+org.killbill.billing.plugin.kpm.connectTimeoutSec={{ lookup('env', 'KILLBILL_KPM_CONNECT_TIMEOUT_SEC') }}
 {% endif %}
